@@ -1,0 +1,172 @@
+-- Número total de leitos gerais ao longo dos anos:
+
+-- Para 2020
+SELECT
+    '2020' AS ano,
+    SUM(LEITOS_EXISTENTES) AS total_leitos_gerais
+FROM estabelecimentos_2020;
+
+-- Para 2021
+SELECT
+    '2021' AS ano,
+    SUM(LEITOS_EXISTENTES) AS total_leitos_gerais
+FROM estabelecimentos_2021;
+
+-- Para 2022
+SELECT
+    '2022' AS ano,
+    SUM(LEITOS_EXISTENTES) AS total_leitos_gerais
+FROM estabelecimentos_2022;
+
+-- Estabelecimentos	com o maior número de leitos complementares
+-- Para 2020
+SELECT
+    NOME_ESTABELECIMENTO,
+    NO_EMAIL,
+    NU_TELEFONE,
+    LEITOS_EXISTENTES
+FROM estabelecimentos_2020
+ORDER BY LEITOS_EXISTENTES DESC
+LIMIT 5;
+
+-- Para 2021
+SELECT
+    NOME_ESTABELECIMENTO,
+    NO_EMAIL,
+    NU_TELEFONE,
+    LEITOS_EXISTENTES
+FROM estabelecimentos_2021
+ORDER BY LEITOS_EXISTENTES DESC
+LIMIT 5;
+
+-- Para 2022
+SELECT
+    NOME_ESTABELECIMENTO,
+    NO_EMAIL,
+    NU_TELEFONE,
+    LEITOS_EXISTENTES
+FROM estabelecimentos_2022
+ORDER BY LEITOS_EXISTENTES DESC
+LIMIT 5;
+
+--  Percentual de estabelecimentos que disponibilizam dados gerais por ano:
+
+-- Para 2020
+SELECT
+    '2020' AS ano,
+    COUNT(*) AS total_estabelecimentos,
+    COUNT(CASE WHEN NO_EMAIL IS NOT NULL THEN 1 END) AS estabelecimentos_com_dados
+FROM estabelecimentos_2020;
+
+-- Para 2021
+SELECT
+    '2021' AS ano,
+    COUNT(*) AS total_estabelecimentos,
+    COUNT(CASE WHEN NO_EMAIL IS NOT NULL THEN 1 END) AS estabelecimentos_com_dados
+FROM estabelecimentos_2021;
+
+-- Para 2022
+SELECT
+    '2022' AS ano,
+    COUNT(*) AS total_estabelecimentos,
+    COUNT(CASE WHEN NO_EMAIL IS NOT NULL THEN 1 END) AS estabelecimentos_com_dados
+FROM estabelecimentos_2022;
+
+-- Total de Leitos por Tipo em cada ano:
+
+-- Para 2020
+SELECT DS_TIPO_UNIDADE, SUM(LEITOS_EXISTENTES) AS TOTAL_LEITOS
+FROM estabelecimentos_2020
+GROUP BY DS_TIPO_UNIDADE;
+
+-- Para 2021
+SELECT DS_TIPO_UNIDADE, SUM(LEITOS_EXISTENTES) AS TOTAL_LEITOS
+FROM estabelecimentos_2021
+GROUP BY DS_TIPO_UNIDADE;
+
+-- Para 2022
+SELECT DS_TIPO_UNIDADE, SUM(LEITOS_EXISTENTES) AS TOTAL_LEITOS
+FROM estabelecimentos_2022
+GROUP BY DS_TIPO_UNIDADE;
+
+-- Média de Leitos SUS por Município
+
+--Para 2020
+SELECT MUNICIPIO, AVG(LEITOS_SUS) AS MEDIA_LEITOS_SUS
+FROM estabelecimentos_2020
+GROUP BY MUNICIPIO;
+
+--Para 2021
+SELECT MUNICIPIO, AVG(LEITOS_SUS) AS MEDIA_LEITOS_SUS
+FROM estabelecimentos_2021
+GROUP BY MUNICIPIO;
+
+--Para 2022
+SELECT MUNICIPIO, AVG(LEITOS_SUS) AS MEDIA_LEITOS_SUS
+FROM estabelecimentos_2022
+GROUP BY MUNICIPIO;
+
+-- Número de Estabelecimentos por Região:
+
+--Para 2020
+SELECT REGIAO, COUNT(*) AS NUMERO_ESTABELECIMENTOS
+FROM estabelecimentos_2020
+GROUP BY REGIAO;
+
+--Para 2021
+SELECT REGIAO, COUNT(*) AS NUMERO_ESTABELECIMENTOS
+FROM estabelecimentos_2021
+GROUP BY REGIAO;
+
+--Para 2022
+SELECT REGIAO, COUNT(*) AS NUMERO_ESTABELECIMENTOS
+FROM estabelecimentos_2022
+GROUP BY REGIAO;
+
+-- Percentual de Estabelecimentos Públicos e Privados
+
+-- Para 2020
+SELECT TP_GESTAO, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM estabelecimentos_2021) AS PERCENTUAL
+FROM estabelecimentos_2020
+GROUP BY TP_GESTAO;
+
+-- Para 2021
+SELECT TP_GESTAO, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM estabelecimentos_2021) AS PERCENTUAL
+FROM estabelecimentos_2021
+GROUP BY TP_GESTAO;
+
+-- Para 2022
+SELECT TP_GESTAO, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM estabelecimentos_2021) AS PERCENTUAL
+FROM estabelecimentos_2022
+GROUP BY TP_GESTAO;
+
+-- Média de Leitos de UTI por Tipo
+
+--Para 2020
+SELECT AVG(UTI_TOTAL_EXIST) AS MEDIA_UTI_TOTAL, AVG(UTI_TOTAL_SUS) AS MEDIA_UTI_SUS
+FROM estabelecimentos_2020;
+
+--Para 2021
+SELECT AVG(UTI_TOTAL_EXIST) AS MEDIA_UTI_TOTAL, AVG(UTI_TOTAL_SUS) AS MEDIA_UTI_SUS
+FROM estabelecimentos_2021;
+
+--Para 2022
+SELECT AVG(UTI_TOTAL_EXIST) AS MEDIA_UTI_TOTAL, AVG(UTI_TOTAL_SUS) AS MEDIA_UTI_SUS
+FROM estabelecimentos_2022;
+
+-- Número de Estabelecimentos por Natureza Jurídica:
+
+-- Para 2020
+SELECT DESC_NATUREZA_JURIDICA, COUNT(*) AS NUMERO_ESTABELECIMENTOS
+FROM estabelecimentos_2020
+GROUP BY DESC_NATUREZA_JURIDICA;
+
+-- Para 2021
+SELECT DESC_NATUREZA_JURIDICA, COUNT(*) AS NUMERO_ESTABELECIMENTOS
+FROM estabelecimentos_2021
+GROUP BY DESC_NATUREZA_JURIDICA;
+
+-- Para 2022
+SELECT DESC_NATUREZA_JURIDICA, COUNT(*) AS NUMERO_ESTABELECIMENTOS
+FROM estabelecimentos_2022
+GROUP BY DESC_NATUREZA_JURIDICA;
