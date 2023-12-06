@@ -192,12 +192,25 @@ ui <- fluidPage(
                    # Adicione um gráfico para a análise da natureza jurídica por UF
                    plotOutput("grafico_natureza_uf")
                  )
+               )),
+      
+      
+      tabPanel("Análise de Tipo de Gestão do Estabelecimento Hospitalar por UF",
+               sidebarLayout(
+                 sidebarPanel(
+                   # Adicione um seletor de mês
+                   selectInput("mes_selecionado_gestao_uf", "Selecione o Mês",
+                               choices = unique(substr(dados$comp, 5, 6)),
+                               selected = unique(substr(dados$comp, 5, 6))[1])
+                 ),
+                 mainPanel(
+                   # Adicione um gráfico para a análise de gestão por UF
+                   plotOutput("grafico_gestao_uf")
+                 )
                ))
     )
   )
 )
-
-
 
 
 
@@ -473,6 +486,28 @@ server <- function(input, output) {
     ggplot(analise_natureza_uf, aes(x = UF, y = Media_Leitos, fill = DESC_NATUREZA_JURIDICA)) +
       geom_bar(stat = "identity", position = "dodge") +
       labs(title = "Análise da Natureza Jurídica dos Estabelecimentos Hospitalares por UF",
+           x = "UF",
+           y = "Média de Leitos") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),  # Rotaciona os rótulos do eixo x
+            plot.title = element_text(hjust = 0.5),  # Centraliza o título
+            legend.position = "top")
+  })
+  
+  output$grafico_gestao_uf <- renderPlot({
+    
+    # Filtrar os dados com base no mês selecionado
+    dados_filtrados <- filter(dados, Mes == input$mes_selecionado_gestao_uf)
+    
+    # Calcular a média de leitos por tipo de gestão e UF
+    analise_gestao_uf <- dados_filtrados %>%
+      group_by(TP_GESTAO, UF) %>%
+      summarise(Media_Leitos = mean(LEITOS_EXISTENTE, na.rm = TRUE))
+    
+    # Criar gráfico de barras
+    ggplot(analise_gestao_uf, aes(x = UF, y = Media_Leitos, fill = TP_GESTAO)) +
+      geom_bar(stat = "identity", position = "dodge") +
+      labs(title = "Análise de Tipo de Gestão do Estabelecimento Hospitalar por UF",
            x = "UF",
            y = "Média de Leitos") +
       theme_minimal() +
