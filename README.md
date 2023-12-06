@@ -40,6 +40,6 @@ Utilizando as tabelas relacionais citadas no item 2 acima, realizar, dentre outr
 
 ### Criação do Aplicativo Shiny R
 
-Considerando os dados de 2021, criamos um aplicativo Shiny com algumas análises descritivas. Os resultados podem ser acessados  [AQUI](https://halha0-guilherme-rodrigues.shinyapps.io/app_leitos_hospitais/)
+Considerando os dados de 2021, criamos um aplicativo Shiny com algumas análises descritivas. Os resultados podem ser acessados  [AQUI](https://grodrigues.shinyapps.io/app_leitos_hospitais/)
 
 O aplicativo ainda está em construção e planejamos implementar de modo que o usuário possa fazer upload do banco de dados de leitos hospitalares de qualquer outro ano para que as análises sejam exibidas.
