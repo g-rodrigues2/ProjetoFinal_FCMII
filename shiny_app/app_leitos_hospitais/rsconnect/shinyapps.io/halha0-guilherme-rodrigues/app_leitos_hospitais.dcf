@@ -5,7 +5,7 @@ account: halha0-guilherme-rodrigues
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10733847
-bundleId: 8015248
+bundleId: 8017617
 url: https://grodrigues.shinyapps.io/app_leitos_hospitais/
 version: 1
 asMultiple: FALSE

@@ -35,13 +35,13 @@ ui <- fluidPage(
   
   navbarPage(
     #theme = "cyborg",  # <--- To use a theme, uncomment this
-    "Análises descritivas",
+    "Análises descritivas do banco de dados referente a 2021",
     
     # Use tabsetPanel to create two tabs
     
     #Painel de leitos disponíveis por tipo de hospital
     tabsetPanel(
-      tabPanel("Quantidade de leitos por tipo de estabelecimento hospitalar",  
+      tabPanel("Quantidade de leitos de UTI por tipo de estabelecimento hospitalar",  
                sidebarLayout(
                  sidebarPanel(
                    
@@ -67,7 +67,7 @@ ui <- fluidPage(
                )
       ),
       
-      tabPanel("Média de Leitos SUS e Existentes por Tipo de Estabelecimento Hospitalar",
+      tabPanel("Média de leitos SUS e leitos existentes por tipo de estabelecimento hospitalar",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -82,7 +82,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Quantidade de Leitos por Tipo de Estabelecimento",
+      tabPanel("Quantidade de leitos existentes por tipo de estabelecimento hospitalar",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -96,7 +96,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Média de Leitos Existentes e Leitos SUS por Natureza Jurídica",
+      tabPanel("Média de leitos existentes e leitos SUS por natureza jurídica",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -111,7 +111,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Distribuição de Hospitais por Região e Tipo de Unidade",
+      tabPanel("Distribuição de hospitais por região e tipo de unidade",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -125,7 +125,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Taxa de Leitos SUS por Tipo de Unidade",
+      tabPanel("Taxa de leitos SUS por tipo de unidade",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -139,7 +139,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Correlação entre Número de Leitos e Tipo de Unidade",
+      tabPanel("Correlação entre número de leitos e tipo de unidade",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -152,7 +152,7 @@ ui <- fluidPage(
                    plotOutput("grafico_correlacao_leitos_tipo_unidade")
                  )
                )),
-      tabPanel("Avaliação da Cobertura de UTI por Região",
+      tabPanel("Percentual da cobertura de UTI por região",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -166,7 +166,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Comparação de Número de Leitos",
+      tabPanel("Comparação da média de leitos entre hospitais públicos e privados",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -180,7 +180,7 @@ ui <- fluidPage(
                  )
                )),
       
-      tabPanel("Análise da Natureza Jurídica por UF",
+      tabPanel("Análise da natureza jurídica dos hospitais por UF",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -195,7 +195,7 @@ ui <- fluidPage(
                )),
       
       
-      tabPanel("Análise de Tipo de Gestão do Estabelecimento Hospitalar por UF",
+      tabPanel("Análise de tipo de gestão do estabelecimento hospitalar por UF",
                sidebarLayout(
                  sidebarPanel(
                    # Adicione um seletor de mês
@@ -248,6 +248,7 @@ server <- function(input, output) {
     
     ggplot(soma_leitos_long, aes(x = DS_TIPO_UNIDADE, y = Soma_Leitos, fill = Tipo_Leito)) +
       geom_bar(stat = "identity", position = "dodge") +
+      geom_text(aes(label = Soma_Leitos), vjust = 0.1, position = position_dodge(width = 0.9), size = 4) +
       labs(title = "Quantidade de Leitos por Tipo de Estabelecimento Hospitalar",
            x = "Tipo de Estabelecimento",
            y = "Quantidade de Leitos") +
@@ -271,6 +272,9 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(media_leitos_sus, aes(x = DS_TIPO_UNIDADE, y = Media_LEITOS_SUS, fill = DS_TIPO_UNIDADE)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = round(Media_LEITOS_SUS, 2)),  # Adiciona os valores nas barras
+                position = position_stack(vjust = 0.5),  # Ajusta a posição dos valores
+                color = "black", size = 5) +  # Adiciona os valores nas barras
       labs(title = "Média de Leitos SUS por Tipo de Estabelecimento Hospitalar",
            x = "Tipo de Estabelecimento",
            y = "Média de Leitos SUS") +
@@ -291,6 +295,9 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(media_leitos_existentes, aes(x = DS_TIPO_UNIDADE, y = Media_LEITOS_EXISTENTES, fill = DS_TIPO_UNIDADE)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = round(Media_LEITOS_EXISTENTES, 2)),  # Adiciona os valores nas barras
+                position = position_stack(vjust = 0.5),  # Ajusta a posição dos valores
+                color = "black", size = 5) +  # Estilo do texto +
       labs(title = "Média de Leitos Existentes por Tipo de Estabelecimento Hospitalar",
            x = "Tipo de Estabelecimento",
            y = "Média de Leitos Existentes") +
@@ -312,6 +319,9 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(analise_tipo_estabelecimento, aes(x = DESC_NATUREZA_JURIDICA, y = Total_Leitos, fill = DESC_NATUREZA_JURIDICA)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = Total_Leitos),  # Adiciona os valores nas barras
+                position = position_stack(vjust = 0.5),  # Ajusta a posição dos valores
+                color = "black", size = 5) +
       labs(title = "Quantidade de Leitos Existentes por Natureza Jurídica da Instituição",
            x = "Natureza Jurídica",
            y = "Quantidade Total de Leitos") +
@@ -334,6 +344,9 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(media_leitos_sus, aes(x = DESC_NATUREZA_JURIDICA, y = Media_LEITOS_SUS, fill = DESC_NATUREZA_JURIDICA)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = round(Media_LEITOS_SUS, 2)),  # Adiciona os valores nas barras
+                position = position_stack(vjust = 0.5),  # Ajusta a posição dos valores
+                color = "black", size = 5) +  # Estilo do texto
       labs(title = "Média de Leitos SUS por Natureza Jurídica da Instituição",
            x = "Natureza Jurídica ",
            y = "Média de Leitos SUS") +
@@ -355,6 +368,7 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(media_leitos_existentes, aes(x = DESC_NATUREZA_JURIDICA, y = Media_LEITOS_EXISTENTES, fill = DESC_NATUREZA_JURIDICA)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = round(Media_LEITOS_EXISTENTES, 2)), vjust = -0.5, color = "black") +
       labs(title = "Média de Leitos Existentes por Natureza Jurídica",
            x = "Natureza Jurídica",
            y = "Média de Leitos Existentes") +
@@ -377,6 +391,7 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(distribuicao_hospitais, aes(x = DS_TIPO_UNIDADE, y = Count, fill = REGIAO)) +
       geom_bar(stat = "identity", position = "dodge") +
+      geom_text(aes(label = Count), position = position_dodge(width = 0.9), vjust = -0.5) +
       labs(title = "Distribuição de Hospitais por Região e Tipo de Estabelecimento Hospitalar",
            x = "Tipo de Estabelecimento",
            y = "Número de Hospitais") +
@@ -397,6 +412,8 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(taxa_leitos_sus, aes(x = DS_TIPO_UNIDADE, y = Taxa_LEITOS_SUS, fill = DS_TIPO_UNIDADE)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = sprintf("%.2f", Taxa_LEITOS_SUS), group = DS_TIPO_UNIDADE),
+                position = position_dodge(width = 1), vjust = 0.1, size = 4) +
       labs(title = "Taxa de Leitos SUS por Tipo de Estabelecimento Hospitalar",
            x = "Tipo de Estabelecimento",
            y = "Taxa de Leitos SUS") +
@@ -419,6 +436,9 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(correlacao_leitos_tipo_unidade, aes(x = DS_TIPO_UNIDADE, y = Correlacao_Leitos, fill = DS_TIPO_UNIDADE)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
+      geom_text(aes(label = round(Correlacao_Leitos, 2)),  # Adiciona os rótulos com arredondamento para 2 casas decimais
+                position = position_stack(vjust = 0.5),  # Ajusta a posição do rótulo
+                color = "black", size = 5) +
       labs(title = "Correlação entre Número de Leitos e Tipo de Estabelecimento Hospitalar",
            x = "Tipo de Estabelecimento",
            y = "Correlação") +
@@ -441,7 +461,11 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(cobertura_uti_regiao, aes(x = REGIAO, y = Cobertura_UTI, fill = REGIAO)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
-      labs(title = "Avaliação da Cobertura de UTI por Região",
+      geom_text(aes(label = sprintf("%.1f%%", Cobertura_UTI * 100)), 
+                vjust = 0.1,     # Ajusta a posição vertical do texto
+                size = 5,         # Ajusta o tamanho do texto
+                color = "black") +  # Cor do texto
+      labs(title = "Percentual da Cobertura de UTI por Região",
            x = "Região",
            y = "Cobertura de UTI") +
       theme_minimal() +
@@ -463,7 +487,10 @@ server <- function(input, output) {
     # Criar gráfico de barras
     ggplot(comparacao_leitos, aes(x = DESC_NATUREZA_JURIDICA, y = Media_Leitos, fill = DESC_NATUREZA_JURIDICA)) +
       geom_bar(stat = "identity", color = "white", size = 1.5) +  # Adiciona bordas brancas
-      labs(title = "Comparação de Número de Leitos entre Hospitais Públicos e Privados",
+      geom_text(aes(label = round(Media_Leitos, 2)),  # Adiciona os valores nas barras
+                position = position_stack(vjust = 0.5),  # Ajusta a posição dos valores
+                color = "black", size = 5) +
+      labs(title = "Comparação da Média de Leitos entre Hospitais Públicos e Privados",
            x = "Natureza Jurídica",
            y = "Média de Leitos") +
       theme_minimal() +
